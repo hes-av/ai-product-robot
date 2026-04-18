@@ -12,6 +12,9 @@
             --secondary: #333333;
             --bg-light: #f4f6f8;
         }
+        html {
+            scroll-behavior: smooth;
+        }
         body {
             font-family: 'Pretendard', sans-serif;
             margin: 0;
@@ -48,6 +51,84 @@
         }
         nav a:hover {
             color: var(--primary);
+        }
+
+        /* Repair Section */
+        .repair-section {
+            padding: 100px 20px;
+            background-color: #ffffff;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .section-header h2 {
+            font-size: 36px;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        .section-header p {
+            color: #666;
+            font-size: 18px;
+        }
+        .inquiry-form {
+            background: #fdfdfd;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            border: 1px solid #eee;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            box-sizing: border-box;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 75, 155, 0.1);
+        }
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C2.185 5.355 2.396 5 2.765 5h10.47c.37 0 .58.355.313.658l-4.796 5.482a.503.503 0 0 1-.704 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            padding-right: 40px;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .btn-submit:hover {
+            background: #003673;
+            transform: translateY(-2px);
+        }
+        .btn-submit:active {
+            transform: translateY(0);
         }
 
         /* Hero Section */
@@ -266,6 +347,7 @@
             <a href="#">프로젝터</a>
             <a href="#">LED 전광판</a>
             <a href="#">시스템 설계</a>
+            <a href="#repair">수리 문의</a>
         </nav>
     </header>
 
@@ -288,6 +370,51 @@
             <h3>맞춤형 시스템 설계</h3>
             <p>투사 거리, 시야각, 공간의 채광을 정밀하게 계산하여 완벽한 화질을 구현합니다.</p>
         </div>
+    </section>
+
+    <section id="repair" class="repair-section">
+        <div class="section-header">
+            <h2>장비 수리 및 AS 문의</h2>
+            <p>수리가 필요한 장비 정보를 입력해주시면 담당자가 확인 후 연락드리겠습니다.</p>
+        </div>
+        
+        <form action="https://formspree.io/f/xdalrvzw" method="POST" class="inquiry-form">
+            <div class="form-group">
+                <label for="name">성함</label>
+                <input type="text" id="name" name="name" class="form-control" placeholder="성함을 입력해 주세요" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">연락처</label>
+                <input type="tel" id="phone" name="phone" class="form-control" placeholder="연락 가능한 번호를 입력해 주세요 (예: 010-0000-0000)" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">이메일 주소</label>
+                <input type="email" id="email" name="_replyto" class="form-control" placeholder="이메일 주소를 입력해 주세요">
+            </div>
+            
+            <div class="form-group">
+                <label for="equipment">장비 종류</label>
+                <select id="equipment" name="equipment" class="form-control" required>
+                    <option value="" disabled selected>장비 종류를 선택해 주세요</option>
+                    <option value="projector">프로젝터 (Panasonic 등)</option>
+                    <option value="led">LED 전광판 (Kslim 등)</option>
+                    <option value="sound">음향 시스템</option>
+                    <option value="other">기타 장비</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="message">문의 내용</label>
+                <textarea id="message" name="message" class="form-control" rows="5" placeholder="수리 증상이나 문의 내용을 상세히 적어주시면 빠른 상담이 가능합니다." required></textarea>
+            </div>
+            
+            <!-- Honeypot 스팸 방지 -->
+            <input type="text" name="_gotcha" style="display:none">
+            
+            <button type="submit" class="btn-submit">문의 신청하기</button>
+        </form>
     </section>
 
     <footer>
