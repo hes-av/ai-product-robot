@@ -21,6 +21,12 @@
     - Formspree 연동 (`https://formspree.io/f/xdalrvzw`).
 - **스타일링:** 폼 요소들을 현대적이고 직관적으로 디자인 (Input focus 효과, 버튼 호버 효과 등).
 
+### Google AdSense 연동
+수익 창출 및 사이트 소유자 확인을 위한 Google AdSense를 연동했습니다.
+
+- **사이트 연결:** `<meta>` 태그 및 AdSense 자동 광고 스크립트 삽입.
+- **ads.txt 생성:** 루트 디렉토리에 수익 자격 증명 파일 (`ads.txt`) 생성.
+
 ### 기술 스택
 - HTML5, CSS3 (Modern Baseline features)
 - JavaScript (ES Modules)
