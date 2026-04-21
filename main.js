@@ -176,4 +176,146 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (micBtn) {
         micBtn.style.display = 'none';
     }
+
+    // ==========================================
+    // LED Calculator Logic
+    // ==========================================
+    const calcForm = document.getElementById('led-calc-form');
+    const btnCalculate = document.getElementById('btn-calculate');
+    const btnSave = document.getElementById('btn-save');
+    const btnClearHistory = document.getElementById('btn-clear-history');
+    const calcResults = document.getElementById('calc-results');
+    const historySection = document.getElementById('calc-history');
+    const historyTableBody = document.querySelector('#history-table tbody');
+
+    function calculateLED() {
+        const pitch = parseFloat(document.getElementById('pixel-pitch').value);
+        const widthM = parseFloat(document.getElementById('screen-width').value);
+        const heightM = parseFloat(document.getElementById('screen-height').value);
+
+        if (isNaN(pitch) || isNaN(widthM) || isNaN(heightM)) {
+            alert('올바른 숫자를 입력해 주세요.');
+            return null;
+        }
+
+        const widthPx = Math.floor((widthM * 1000) / pitch);
+        const heightPx = Math.floor((heightM * 1000) / pitch);
+        const diagonalInch = (Math.sqrt(Math.pow(widthM, 2) + Math.pow(heightM, 2)) * 39.37).toFixed(1);
+        const area = (widthM * heightM).toFixed(2);
+        
+        // Cabinet logic (Assuming 500x500mm standard cabinet for P1.x-P2.x, 640x480 for P2.5+)
+        const cabWidth = pitch >= 2.5 ? 0.64 : 0.5;
+        const cabHeight = pitch >= 2.5 ? 0.48 : 0.5;
+        const cabsW = Math.ceil(widthM / cabWidth);
+        const cabsH = Math.ceil(heightM / cabHeight);
+        const totalCabs = cabsW * cabsH;
+
+        // Controller logic
+        const totalPixels = widthPx * heightPx;
+        const receiverCards = totalCabs;
+        const sendingPorts = Math.ceil(totalPixels / 650000);
+
+        // Power & Weight
+        const powerAvg = Math.round(area * 300);
+        const powerPeak = Math.round(area * 800);
+        const weight = Math.round(area * 35); // Approx 35kg/sqm
+
+        // Aspect Ratio
+        const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
+        const ratioGcd = gcd(Math.round(widthM * 100), Math.round(heightM * 100));
+        const aspectStr = `${Math.round(widthM * 100 / ratioGcd)}:${Math.round(heightM * 100 / ratioGcd)}`;
+
+        const results = [
+            { label: '전체 해상도', value: `${widthPx} x ${heightPx}`, unit: 'px' },
+            { label: '대각선 크기', value: diagonalInch, unit: 'inch' },
+            { label: '화면 비율', value: aspectStr, unit: '' },
+            { label: '총 캐비닛 수', value: totalCabs, unit: '개' },
+            { label: '리시버 카드', value: receiverCards, unit: '장' },
+            { label: '필요 출력 포트', value: sendingPorts, unit: '포트' },
+            { label: '평균 소비 전력', value: powerAvg, unit: 'W' },
+            { label: '최대 소비 전력', value: powerPeak, unit: 'W' },
+            { label: '예상 총 중량', value: weight, unit: 'kg' },
+            { label: '권장 시청 거리', value: (pitch * 1.5).toFixed(1), unit: 'm 이상' }
+        ];
+
+        displayResults(results);
+        return { pitch, widthM, heightM, widthPx, heightPx, date: new Date().toLocaleString() };
+    }
+
+    function displayResults(results) {
+        calcResults.innerHTML = '';
+        results.forEach(res => {
+            const card = document.createElement('div');
+            card.className = 'result-card';
+            card.innerHTML = `
+                <div class="label">${res.label}</div>
+                <div class="value">${res.value}<span class="unit">${res.unit}</span></div>
+            `;
+            calcResults.appendChild(card);
+        });
+        calcResults.style.display = 'grid';
+    }
+
+    function saveCalculation(data) {
+        if (!data) return;
+        let history = JSON.parse(localStorage.getItem('led_calc_history') || '[]');
+        history.unshift(data);
+        history = history.slice(0, 10); // Keep last 10
+        localStorage.setItem('led_calc_history', JSON.stringify(history));
+        updateHistoryTable();
+        alert('계산 결과가 저장되었습니다.');
+    }
+
+    function updateHistoryTable() {
+        const history = JSON.parse(localStorage.getItem('led_calc_history') || '[]');
+        if (history.length === 0) {
+            historySection.style.display = 'none';
+            return;
+        }
+
+        historyTableBody.innerHTML = '';
+        history.forEach((item, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.date}</td>
+                <td>P${item.pitch}</td>
+                <td>${item.widthM}m x ${item.heightM}m</td>
+                <td>${item.widthPx} x ${item.heightPx}</td>
+                <td><button class="btn-delete" data-index="${index}">×</button></td>
+            `;
+            historyTableBody.appendChild(row);
+        });
+
+        historySection.style.display = 'block';
+
+        // Add delete listeners
+        document.querySelectorAll('.btn-delete').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = e.target.getAttribute('data-index');
+                deleteHistoryItem(idx);
+            });
+        });
+    }
+
+    function deleteHistoryItem(index) {
+        let history = JSON.parse(localStorage.getItem('led_calc_history') || '[]');
+        history.splice(index, 1);
+        localStorage.setItem('led_calc_history', JSON.stringify(history));
+        updateHistoryTable();
+    }
+
+    btnCalculate.addEventListener('click', calculateLED);
+    btnSave.addEventListener('click', () => {
+        const data = calculateLED();
+        saveCalculation(data);
+    });
+    btnClearHistory.addEventListener('click', () => {
+        if (confirm('모든 기록을 삭제하시겠습니까?')) {
+            localStorage.removeItem('led_calc_history');
+            updateHistoryTable();
+        }
+    });
+
+    // Initial history load
+    updateHistoryTable();
 });

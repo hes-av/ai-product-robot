@@ -39,6 +39,10 @@
                     <li><a href="#business-solutions">Business & Education</a></li>
                     <li><a href="#large-scale">Large Scale Events</a></li>
                 </ul>
+                <div class="nav-category">Tools</div>
+                <ul>
+                    <li><a href="#led-calculator">LED Calculator</a></li>
+                </ul>
                 <div class="nav-category">Support</div>
                 <ul>
                     <li><a href="#maintenance">Maintenance & AS</a></li>
@@ -262,6 +266,67 @@
                     </div>
                     <button type="submit" class="btn-submit">문의 전송하기</button>
                 </form>
+            </section>
+
+            <!-- LED Calculator Section -->
+            <section id="led-calculator">
+                <div class="breadcrumb">Tools > LED Calculator</div>
+                <h2>전문가용 LED 전광판 사양 계산기</h2>
+                <p>설치하고자 하는 LED 전광판의 가로, 세로 크기와 픽셀 피치를 입력하면 해상도, 필요 하드웨어, 소비 전력 등 상세 사양을 자동으로 산출합니다.</p>
+
+                <div class="calculator-container">
+                    <form id="led-calc-form" class="contact-form" style="margin-bottom: 30px;">
+                        <div class="landing-grid" style="margin-top: 0; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                            <div class="form-group">
+                                <label for="pixel-pitch">LED 타입 (픽셀 피치)</label>
+                                <select id="pixel-pitch" class="form-control">
+                                    <option value="1.25">P1.25 (초미세 실내용)</option>
+                                    <option value="1.53">P1.53 (고해상도 실내용)</option>
+                                    <option value="1.86" selected>P1.86 (표준 실내용)</option>
+                                    <option value="2.0">P2.0 (실내 범용)</option>
+                                    <option value="2.5">P2.5 (강당/교회용)</option>
+                                    <option value="3.0">P3.0 (대형 로비용)</option>
+                                    <option value="4.0">P4.0 (옥외/대형용)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="screen-width">가로 너비 (m)</label>
+                                <input type="number" id="screen-width" class="form-control" value="3.84" step="0.01" min="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label for="screen-height">세로 높이 (m)</label>
+                                <input type="number" id="screen-height" class="form-control" value="2.16" step="0.01" min="0.1">
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 10px;">
+                            <button type="button" id="btn-calculate" class="btn-submit" style="flex: 1;">계산하기</button>
+                            <button type="button" id="btn-save" class="btn-submit" style="flex: 1; background: #6c757d;">결과 저장하기</button>
+                        </div>
+                    </form>
+
+                    <div id="calc-results" class="calc-results-grid" style="display: none;">
+                        <!-- Results will be injected here -->
+                    </div>
+
+                    <div id="calc-history" class="history-section" style="margin-top: 40px; display: none;">
+                        <h3>최근 계산 기록</h3>
+                        <div class="table-responsive">
+                            <table id="history-table">
+                                <thead>
+                                    <tr>
+                                        <th>날짜</th>
+                                        <th>타입</th>
+                                        <th>크기(WxH)</th>
+                                        <th>해상도</th>
+                                        <th>동작</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <button id="btn-clear-history" style="background: none; border: none; color: #ff4757; cursor: pointer; font-size: 13px; margin-top: 10px; padding: 0;">🗑 모든 기록 삭제</button>
+                    </div>
+                </div>
             </section>
 
             <!-- Privacy Policy -->
