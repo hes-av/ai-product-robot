@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>전문가용 LED 전광판 통합 사양 계산기 (모듈 수량 포함)</title>
+    <!-- 프리텐다드 폰트 적용 -->
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+    <style>
+        :root {
+            --led-primary: #004b9b;
+            --led-accent: #007bff;
+            --led-bg: #ffffff;
+            --led-border: #e9ecef;
+            --led-text: #212529;
+            --led-muted: #6c757d;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .led-calculator-container {
+            font-family: 'Pretendard', sans-serif;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 40px;
+            background: var(--led-bg);
+            border: 1px solid var(--led-border);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            color: var(--led-text);
+            line-height: 1.6;
+        }
+
+        .led-calculator-container h2 {
+            font-size: 26px;
+            color: var(--led-primary);
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: 800;
+        }
+
+        .led-calculator-container .subtitle {
+            text-align: center;
+            color: var(--led-muted);
+            font-size: 14px;
+            margin-bottom: 40px;
+        }
+
+        .led-input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .led-field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .led-field-group label {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--led-primary);
+        }
+
+        .led-field-group select, 
+        .led-field-group input {
+            padding: 14px;
+            border: 1px solid #ced4da;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .led-field-group input:focus, .led-field-group select:focus {
+            border-color: var(--led-accent);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
+        .led-action-area {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .led-button {
+            flex: 1;
+            padding: 18px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .led-button-main { background: var(--led-primary); color: white; }
+        .led-button-main:hover { background: #00336a; transform: translateY(-2px); }
+        .led-button-sub { background: #6c757d; color: white; }
+        .led-button-sub:hover { background: #5a6268; }
+
+        .led-results-display {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            display: none;
+        }
+
+        .led-result-card {
+            background: #fff;
+            padding: 25px;
+            border: 1px solid var(--led-border);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .led-result-card:hover {
+            border-color: var(--led-accent);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .led-result-card .label {
+            font-size: 13px;
+            color: var(--led-muted);
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .led-result-card .value {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--led-primary);
+        }
+
+        .led-result-card .unit {
+            font-size: 14px;
+            color: var(--led-text);
+            margin-left: 5px;
+            font-weight: 500;
+        }
+
+        .led-history-view {
+            margin-top: 50px;
+            border-top: 2px dashed var(--led-border);
+            padding-top: 40px;
+            display: none;
+        }
+
+        .led-table-container {
+            overflow-x: auto;
+            border-radius: 10px;
+            border: 1px solid var(--led-border);
+        }
+
+        .led-history-view table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .led-history-view th {
+            text-align: left;
+            padding: 15px;
+            background: #f8f9fa;
+            border-bottom: 2px solid var(--led-border);
+            color: var(--led-muted);
+        }
+
+        .led-history-view td {
+            padding: 15px;
+            border-bottom: 1px solid var(--led-border);
+        }
+
+        .led-btn-delete {
+            color: #ff4757;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        .led-expert-tip {
+            background: #e7f5ff;
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            margin-top: 35px;
+            color: #1864ab;
+            border-left: 6px solid var(--led-accent);
+        }
+
+        @media (max-width: 600px) {
+            .led-action-area { flex-direction: column; }
+            .led-calculator-container { padding: 25px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="led-calculator-container">
+    <h2>LED SCREEN EXPERT CALCULATOR</h2>
+    <div class="subtitle">모듈 수량 및 시스템 사양 정밀 계산 도구 | 훈민아이테크</div>
+
+    <div class="led-input-grid">
+        <div class="led-field-group">
+            <label>픽셀 피치 (Pixel Pitch)</label>
+            <select id="p-pitch">
+                <option value="1.25">P1.25 (320x160mm 모듈)</option>
+                <option value="1.53">P1.53 (320x160mm 모듈)</option>
+                <option value="1.86" selected>P1.86 (320x160mm 모듈)</option>
+                <option value="2.0">P2.0 (320x160mm 모듈)</option>
+                <option value="2.5">P2.5 (320x160mm 모듈)</option>
+                <option value="3.0">P3.0 (192x192mm 모듈)</option>
+                <option value="4.0">P4.0 (256x128mm 모듈)</option>
+            </select>
+        </div>
+        <div class="led-field-group">
+            <label>가로 너비 (Width, m)</label>
+            <input type="number" id="p-width" value="3.84" step="0.01">
+        </div>
+        <div class="led-field-group">
+            <label>세로 높이 (Height, m)</label>
+            <input type="number" id="p-height" value="2.16" step="0.01">
+        </div>
+    </div>
+
+    <div class="led-action-area">
+        <button type="button" class="led-button led-button-main" onclick="CORE.run()">사양 계산하기</button>
+        <button type="button" class="led-button led-button-sub" onclick="CORE.save()">계산 내역 저장</button>
+    </div>
+
+    <div id="panel-results" class="led-results-display">
+        <!-- 결과 카드 자동 생성 -->
+    </div>
+
+    <div class="led-expert-tip">
+        <strong>💡 전문가 조언:</strong> 전광판 규격은 선택하신 모듈 크기의 배수에 맞춰 설계할 때 가장 효율적입니다. 계산된 '총 모듈 수'는 입력하신 면적을 구성하는 최소 수량입니다.
+    </div>
+
+    <div id="panel-history" class="led-history-view">
+        <h3 style="font-size: 18px; margin-bottom: 20px; color: var(--led-primary);">📋 최근 저장 내역</h3>
+        <div class="led-table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>날짜/시간</th>
+                        <th>피치</th>
+                        <th>규격(WxH)</th>
+                        <th>모듈 수</th>
+                        <th>삭제</th>
+                    </tr>
+                </thead>
+                <tbody id="list-history"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    /**
+     * LED Calculator Expert Core
+     */
+    const CORE = {
+        run: function() {
+            const pitch = parseFloat(document.getElementById('p-pitch').value);
+            const w = parseFloat(document.getElementById('p-width').value);
+            const h = parseFloat(document.getElementById('p-height').value);
+
+            if (!w || !h || w <= 0 || h <= 0) {
+                alert("가로 및 세로 길이를 올바르게 입력해 주세요.");
+                return null;
+            }
+
+            // 1. 모듈 규격 설정 (업계 표준)
+            let modW, modH;
+            if (pitch <= 2.5) { modW = 0.32; modH = 0.16; }
+            else if (pitch == 3.0) { modW = 0.192; modH = 0.192; }
+            else { modW = 0.256; modH = 0.128; }
+
+            // 2. 모듈 수량 계산
+            const modsW = Math.ceil(w / modW);
+            const modsH = Math.ceil(h / modH);
+            const totalMods = modsW * modsH;
+
+            // 3. 해상도 및 물리 수치
+            const rw = Math.floor((w * 1000) / pitch);
+            const rh = Math.floor((h * 1000) / pitch);
+            const diagonal = (Math.sqrt(w*w + h*h) * 39.37).toFixed(1);
+            const area = (w * h).toFixed(2);
+            const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
+            const common = gcd(Math.round(w * 100), Math.round(h * 100));
+            const ratio = (Math.round(w * 100) / common) + ":" + (Math.round(h * 100) / common);
+
+            // 4. 시스템 사양
+            const cabBase = pitch >= 2.5 ? {w:0.64, h:0.48} : {w:0.5, h:0.5};
+            const cabs = Math.ceil(w / cabBase.w) * Math.ceil(h / cabBase.h);
+            const ports = Math.ceil((rw * rh) / 650000);
+
+            // 5. 전력 및 기타
+            const pAvg = Math.round(area * 300);
+            const pMax = Math.round(area * 800);
+            const weight = Math.round(area * 35);
+
+            const items = [
+                { label: "총 모듈 수", value: totalMods, unit: "개 (" + modsW + "x" + modsH + ")" },
+                { label: "전체 해상도", value: rw + " × " + rh, unit: "px" },
+                { label: "적용 모듈 크기", value: (modW*1000) + "x" + (modH*1000), unit: "mm" },
+                { label: "대각선 크기", value: diagonal, unit: "inch" },
+                { label: "필요 출력 포트", value: ports, unit: "Port" },
+                { label: "총 캐비닛 수", value: cabs, unit: "개" },
+                { label: "평균 소비전력", value: pAvg.toLocaleString(), unit: "W" },
+                { label: "최대 소비전력", value: pMax.toLocaleString(), unit: "W" },
+                { label: "권장 시청거리", value: (pitch * 1.5).toFixed(1), unit: "m 이상" }
+            ];
+
+            this.display(items);
+            return { pitch, w, h, totalMods, rw, rh, time: new Date().toLocaleString() };
+        },
+
+        display: function(items) {
+            const panel = document.getElementById('panel-results');
+            panel.innerHTML = "";
+            items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = "led-result-card";
+                div.innerHTML = `
+                    <div class="label">${item.label}</div>
+                    <div class="value">${item.value}<span class="unit">${item.unit}</span></div>
+                `;
+                panel.appendChild(div);
+            });
+            panel.style.display = "grid";
+        },
+
+        save: function() {
+            const data = this.run();
+            if (!data) return;
+
+            let logs = JSON.parse(localStorage.getItem('expert_led_history_v2') || '[]');
+            logs.unshift(data);
+            logs = logs.slice(0, 5);
+            localStorage.setItem('expert_led_history_v2', JSON.stringify(logs));
+            this.load();
+            alert("계산 내역이 저장되었습니다.");
+        },
+
+        load: function() {
+            const logs = JSON.parse(localStorage.getItem('expert_led_history_v2') || '[]');
+            const panel = document.getElementById('panel-history');
+            const list = document.getElementById('list-history');
+
+            if (logs.length === 0) {
+                panel.style.display = "none";
+                return;
+            }
+
+            list.innerHTML = "";
+            logs.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.time}</td>
+                    <td>P${item.pitch}</td>
+                    <td>${item.w}m × ${item.h}m</td>
+                    <td>${item.totalMods}개</td>
+                    <td><button class="led-btn-delete" onclick="CORE.delete(${index})">×</button></td>
+                `;
+                list.appendChild(row);
+            });
+            panel.style.display = "block";
+        },
+
+        delete: function(idx) {
+            let logs = JSON.parse(localStorage.getItem('expert_led_history_v2') || '[]');
+            logs.splice(idx, 1);
+            localStorage.setItem('expert_led_history_v2', JSON.stringify(logs));
+            this.load();
+        }
+    };
+
+    window.onload = function() {
+        CORE.load();
+    };
+</script>
+
+</body>
+</html>

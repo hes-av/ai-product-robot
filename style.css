@@ -186,13 +186,88 @@ footer a {
     margin: 0 10px;
 }
 
-/* Responsive */
+/* Responsive Styles */
 @media (max-width: 992px) {
-    aside {
-        display: none;
+    header {
+        padding: 0 16px;
     }
+
+    header h1 {
+        font-size: 16px;
+    }
+
+    .search-bar {
+        display: none; /* Hide search on small mobile to save space */
+    }
+
+    .menu-btn {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        width: 30px;
+        height: 24px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        margin-right: 15px;
+        z-index: 1001;
+    }
+
+    .menu-btn span {
+        width: 100%;
+        height: 2px;
+        background-color: var(--primary-color);
+        transition: all 0.3s linear;
+    }
+
+    /* Sidebar Mobile Reset */
+    aside {
+        position: fixed;
+        left: -280px; /* Start off-screen */
+        top: 64px;
+        height: calc(100vh - 64px);
+        z-index: 999;
+        transition: left 0.3s ease-in-out;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+
+    aside.active {
+        left: 0;
+    }
+
+    /* Overlay */
+    #sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 64px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 998;
+    }
+
+    #sidebar-overlay.active {
+        display: block;
+    }
+
     main {
-        padding: 24px;
+        padding: 24px 16px;
+    }
+
+    .hero-content {
+        padding: 40px 20px;
+    }
+
+    .hero-content h2 {
+        font-size: 28px;
+    }
+}
+
+@media (min-width: 993px) {
+    .menu-btn {
+        display: none;
     }
 }
 

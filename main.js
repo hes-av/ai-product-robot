@@ -34,9 +34,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
                 history.pushState(null, null, id);
                 showSection(id);
+                
+                // Close mobile menu after clicking
+                if (window.innerWidth <= 992) {
+                    aside.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
             }
         });
     });
+
+    // ==========================================
+    // Mobile Menu Toggle Logic
+    // ==========================================
+    const menuToggle = document.getElementById('menu-toggle');
+    const aside = document.querySelector('aside');
+    const overlay = document.getElementById('sidebar-overlay');
+
+    if (menuToggle && aside && overlay) {
+        menuToggle.addEventListener('click', () => {
+            aside.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            aside.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+    }
 
     // Handle footer link clicks
     const footerLinks = document.querySelectorAll('footer a');
