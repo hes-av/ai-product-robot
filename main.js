@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Close mobile menu after clicking
                 if (window.innerWidth <= 992) {
+                    menuToggle.classList.remove('active');
                     aside.classList.remove('active');
                     overlay.classList.remove('active');
                 }
@@ -53,11 +54,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (menuToggle && aside && overlay) {
         menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
             aside.classList.toggle('active');
             overlay.classList.toggle('active');
         });
 
         overlay.addEventListener('click', () => {
+            menuToggle.classList.remove('active');
             aside.classList.remove('active');
             overlay.classList.remove('active');
         });
