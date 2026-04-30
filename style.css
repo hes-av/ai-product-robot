@@ -512,6 +512,32 @@ footer a {
     color: #999;
 }
 
+/* New Styles for Enhanced Content */
+.hero-image-container {
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.hero-image-container:hover {
+    transform: scale(1.01);
+}
+
+.hero-image-container img {
+    display: block;
+    transition: filter 0.3s;
+}
+
+.faq-item h4 {
+    font-size: 18px;
+    margin-top: 0;
+}
+
+.faq-item p {
+    font-size: 15px;
+    color: #444;
+}
+
 /* LED Calculator Styles */
 .calc-results-grid {
     display: grid;
