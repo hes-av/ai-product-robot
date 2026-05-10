@@ -66,7 +66,7 @@ body {
 .hero-v2 {
     background: var(--dark-bg);
     color: #fff;
-    padding: 100px 5% 60px;
+    padding: 80px 5% 60px;
     text-align: left;
     position: relative;
 }
@@ -84,39 +84,47 @@ body {
 }
 
 .hero-v2 h2 {
-    font-size: 48px;
+    font-size: 3rem;
     font-weight: 700;
     line-height: 1.2;
-    margin: 0 0 20px;
+    margin: 0 0 24px;
     border-bottom: none;
     color: #fff;
 }
 
 .hero-v2 p {
-    font-size: 18px;
+    font-size: 1.25rem;
     color: rgba(255,255,255,0.6);
     margin-bottom: 40px;
     max-width: 600px;
+    line-height: 1.5;
 }
 
 .hero-v2 .hero-ctas {
     display: flex;
-    gap: 20px;
+    gap: 24px;
     margin-bottom: 60px;
 }
 
 .hero-v2 .cta-primary {
-    color: #ff5e3a; /* Matching the reddish text from image if any */
+    color: #ff5e3a;
     font-weight: 700;
     text-decoration: none;
-    font-size: 16px;
+    font-size: 1rem;
+    transition: opacity 0.2s;
 }
 
 .hero-v2 .cta-secondary {
     color: rgba(255,255,255,0.8);
     font-weight: 600;
     text-decoration: none;
-    font-size: 16px;
+    font-size: 1rem;
+    transition: color 0.2s;
+}
+
+.hero-v2 .cta-primary:hover, .hero-v2 .cta-secondary:hover {
+    opacity: 0.8;
+    color: #fff;
 }
 
 .trust-line {
@@ -127,13 +135,13 @@ body {
 }
 
 .trust-item .num {
-    font-size: 28px;
+    font-size: 2rem;
     font-weight: 700;
     display: block;
 }
 
 .trust-item .lab {
-    font-size: 13px;
+    font-size: 0.85rem;
     color: rgba(255,255,255,0.5);
 }
 
@@ -142,14 +150,17 @@ body {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     background: #fff;
+    width: 100%;
 }
 
 .feature-card {
-    padding: 40px;
+    padding: 60px 40px;
     border-right: 1px solid #eee;
-    transition: background 0.2s;
+    transition: all 0.2s ease;
     text-decoration: none;
     color: inherit;
+    display: flex;
+    flex-direction: column;
 }
 
 .feature-card:last-child {
@@ -157,37 +168,66 @@ body {
 }
 
 .feature-card:hover {
-    background: #fcfcfc;
+    background: #f8f9fa;
+    transform: translateY(-5px);
 }
 
 .feature-card .icon-box {
-    font-size: 24px;
+    font-size: 2rem;
     color: var(--primary-color);
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
 
 .feature-card h4 {
-    font-size: 18px;
-    margin: 0 0 10px;
+    font-size: 1.25rem;
+    margin: 0 0 12px;
+    color: var(--text-main);
 }
 
 .feature-card p {
-    font-size: 14px;
+    font-size: 0.95rem;
     color: var(--text-muted);
     margin: 0;
 }
 
-/* Header */
+/* Header (Sidebar Mode) */
 header {
     height: 64px;
     background: #fff;
     border-bottom: 1px solid var(--border-color);
-    display: flex;
+    display: none;
     align-items: center;
     padding: 0 24px;
     position: sticky;
     top: 0;
     z-index: 1000;
+}
+
+header h1 {
+    font-size: 1.25rem;
+    margin: 0;
+    color: var(--primary-color);
+}
+
+/* Sidebar Hamburger */
+.menu-btn {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 24px;
+    height: 18px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-right: 15px;
+}
+
+.menu-btn span {
+    width: 100%;
+    height: 2px;
+    background: var(--primary-color);
+    transition: all 0.3s;
 }
 
 /* Main Layout */
@@ -214,24 +254,15 @@ aside nav ul {
     margin: 0;
 }
 
-aside nav .nav-category {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--text-muted);
-    padding: 12px 24px 8px;
-    text-transform: uppercase;
-}
-
 aside nav a {
     display: block;
-    padding: 8px 24px;
+    padding: 10px 24px;
     color: var(--text-main);
     text-decoration: none;
-    font-size: 14px;
-    transition: background 0.2s, color 0.2s;
+    font-size: 0.95rem;
 }
 
-aside nav a:hover, aside nav a.active {
+aside nav a.active {
     background: #eef2f7;
     color: var(--primary-color);
     font-weight: 600;
@@ -251,36 +282,89 @@ body.is-landing header { display: none; }
 body.is-landing aside { display: none; }
 body.is-landing main { padding: 0; max-width: none; }
 
-/* Desktop version of non-landing pages */
-body:not(.is-landing) .landing-header { display: none; }
+body:not(.is-landing) header { display: flex; }
 
 /* Section visibility */
-section {
-    display: none;
-}
-
-section.active {
-    display: block;
-}
+section { display: none; }
+section.active { display: block; }
 
 /* Footer */
 footer {
-    background: #343a40;
+    background: #1a1d2b;
     color: #fff;
-    padding: 40px 24px;
-    font-size: 13px;
-    text-align: center;
+    padding: 60px 5%;
+    font-size: 0.9rem;
+    text-align: left;
+    border-top: 1px solid rgba(255,255,255,0.1);
 }
 
-@media (max-width: 992px) {
+footer p { margin: 5px 0; opacity: 0.7; }
+
+/* Responsive Optimized Styles */
+@media (max-width: 1024px) {
+    .hero-v2 h2 { font-size: 2.5rem; }
+}
+
+@media (max-width: 768px) {
+    .landing-header {
+        padding: 0 20px;
+    }
+    .landing-header nav {
+        display: none; /* Mobile navigation could be a separate drawer, but let's keep it clean first */
+    }
+    
+    .hero-v2 {
+        padding: 60px 20px 40px;
+    }
+    .hero-v2 h2 {
+        font-size: 2rem;
+    }
+    .hero-v2 p {
+        font-size: 1rem;
+    }
+    
+    .trust-line {
+        flex-direction: column;
+        gap: 20px;
+        padding-top: 30px;
+    }
+    
     .feature-cards {
         grid-template-columns: 1fr;
     }
-    .trust-line {
-        flex-wrap: wrap;
-        gap: 30px;
+    .feature-card {
+        border-right: none;
+        border-bottom: 1px solid #eee;
+        padding: 40px 20px;
     }
-    .hero-v2 h2 {
-        font-size: 32px;
+    .feature-card:last-child { border-bottom: none; }
+
+    main { padding: 30px 20px; }
+    
+    /* Sidebar Mobile */
+    aside {
+        position: fixed;
+        left: -280px;
+        z-index: 1200;
+        transition: left 0.3s;
+    }
+    aside.active { left: 0; }
+    .menu-btn { display: flex; }
+    
+    #sidebar-overlay {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.5);
+        display: none;
+        z-index: 1150;
+    }
+    #sidebar-overlay.active { display: block; }
+}
+
+@media (max-width: 480px) {
+    .hero-v2 h2 { font-size: 1.75rem; }
+    .hero-v2 .hero-ctas {
+        flex-direction: column;
+        gap: 15px;
     }
 }
