@@ -1,16 +1,15 @@
 // Documentation Site Navigation
 document.addEventListener('DOMContentLoaded', () => {
-    const navLinks = document.querySelectorAll('#sidebar-nav a');
     const sections = document.querySelectorAll('main section');
 
     function showSection(id) {
-        // Remove active class from all links and sections
-        navLinks.forEach(link => link.classList.remove('active'));
+        // Remove active class from all sections and sidebar links
         sections.forEach(section => section.classList.remove('active'));
+        document.querySelectorAll('#sidebar-nav a').forEach(link => link.classList.remove('active'));
 
-        // Add active class to target link and section
-        const targetLink = document.querySelector(`#sidebar-nav a[href="${id}"]`);
+        // Add active class to target section
         const targetSection = document.querySelector(id);
+        const targetLink = document.querySelector(`#sidebar-nav a[href="${id}"]`);
 
         if (targetSection) {
             targetSection.classList.add('active');
@@ -26,23 +25,30 @@ document.addEventListener('DOMContentLoaded', () => {
         showSection(window.location.hash);
     }
 
-    // Handle link clicks
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            const id = link.getAttribute('href');
-            if (id.startsWith('#')) {
+    // Handle all internal hash link clicks
+    document.addEventListener('click', (e) => {
+        const link = e.target.closest('a');
+        if (!link) return;
+
+        const id = link.getAttribute('href');
+        if (id && id.startsWith('#')) {
+            const targetSection = document.querySelector(id);
+            if (targetSection) {
                 e.preventDefault();
                 history.pushState(null, null, id);
                 showSection(id);
                 
-                // Close mobile menu after clicking
+                // Close mobile menu
                 if (window.innerWidth <= 992) {
-                    menuToggle.classList.remove('active');
-                    aside.classList.remove('active');
-                    overlay.classList.remove('active');
+                    const menuToggle = document.getElementById('menu-toggle');
+                    const aside = document.querySelector('aside');
+                    const overlay = document.getElementById('sidebar-overlay');
+                    if (menuToggle) menuToggle.classList.remove('active');
+                    if (aside) aside.classList.remove('active');
+                    if (overlay) overlay.classList.remove('active');
                 }
             }
-        });
+        }
     });
 
     // ==========================================
@@ -65,19 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
             overlay.classList.remove('active');
         });
     }
-
-    // Handle footer link clicks
-    const footerLinks = document.querySelectorAll('footer a');
-    footerLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            const id = link.getAttribute('href');
-            if (id.startsWith('#')) {
-                e.preventDefault();
-                history.pushState(null, null, id);
-                showSection(id);
-            }
-        });
-    });
 
     // Simple search placeholder functionality
     const searchInput = document.querySelector('.search-bar input');
