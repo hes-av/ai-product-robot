@@ -33,38 +33,20 @@ document.addEventListener('DOMContentLoaded', () => {
         showSection(window.location.hash);
     }
 
-    // Handle all internal hash link clicks
-    document.addEventListener('click', (e) => {
-        const link = e.target.closest('a');
-        if (!link) return;
-
-        const id = link.getAttribute('href');
-        if (id && id.startsWith('#')) {
-            const targetSection = document.querySelector(id);
-            if (targetSection) {
-                e.preventDefault();
-                history.pushState(null, null, id);
-                showSection(id);
-                
-                // Close mobile menu
-                if (window.innerWidth <= 992) {
-                    const menuToggle = document.getElementById('menu-toggle');
-                    const aside = document.querySelector('aside');
-                    const overlay = document.getElementById('sidebar-overlay');
-                    if (menuToggle) menuToggle.classList.remove('active');
-                    if (aside) aside.classList.remove('active');
-                    if (overlay) overlay.classList.remove('active');
-                }
-            }
-        }
-    });
-
     // ==========================================
     // Mobile Menu Toggle Logic
     // ==========================================
     const menuToggle = document.getElementById('menu-toggle');
+    const landingMenuToggle = document.getElementById('landing-menu-toggle');
+    const landingNav = document.getElementById('landing-nav');
     const aside = document.querySelector('aside');
     const overlay = document.getElementById('sidebar-overlay');
+
+    if (landingMenuToggle && landingNav) {
+        landingMenuToggle.addEventListener('click', () => {
+            landingNav.classList.toggle('active');
+        });
+    }
 
     if (menuToggle && aside && overlay) {
         menuToggle.addEventListener('click', () => {
@@ -79,6 +61,32 @@ document.addEventListener('DOMContentLoaded', () => {
             overlay.classList.remove('active');
         });
     }
+
+    // Handle all internal hash link clicks
+    document.addEventListener('click', (e) => {
+        const link = e.target.closest('a');
+        if (!link) return;
+
+        const id = link.getAttribute('href');
+        if (id && id.startsWith('#')) {
+            const targetSection = document.querySelector(id);
+            if (targetSection) {
+                e.preventDefault();
+                history.pushState(null, null, id);
+                showSection(id);
+                
+                // Close landing mobile menu
+                if (landingNav) landingNav.classList.remove('active');
+
+                // Close doc sidebar
+                if (window.innerWidth <= 768) {
+                    if (menuToggle) menuToggle.classList.remove('active');
+                    if (aside) aside.classList.remove('active');
+                    if (overlay) overlay.classList.remove('active');
+                }
+            }
+        }
+    });
 
     // Simple search placeholder functionality
     const searchInput = document.querySelector('.search-bar input');
