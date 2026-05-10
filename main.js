@@ -3,21 +3,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const sections = document.querySelectorAll('main section');
 
     function showSection(id) {
+        // Toggle is-landing class
+        if (id === '#home') {
+            document.body.classList.add('is-landing');
+        } else {
+            document.body.classList.remove('is-landing');
+        }
+
         // Remove active class from all sections and sidebar links
         sections.forEach(section => section.classList.remove('active'));
         document.querySelectorAll('#sidebar-nav a').forEach(link => link.classList.remove('active'));
+        document.querySelectorAll('.landing-header nav a').forEach(link => link.classList.remove('active'));
 
         // Add active class to target section
         const targetSection = document.querySelector(id);
-        const targetLink = document.querySelector(`#sidebar-nav a[href="${id}"]`);
+        const targetLinkSidebar = document.querySelector(`#sidebar-nav a[href="${id}"]`);
+        const targetLinkLanding = document.querySelector(`.landing-header nav a[href="${id}"]`);
 
         if (targetSection) {
             targetSection.classList.add('active');
             window.scrollTo(0, 0);
         }
-        if (targetLink) {
-            targetLink.classList.add('active');
-        }
+        if (targetLinkSidebar) targetLinkSidebar.classList.add('active');
+        if (targetLinkLanding) targetLinkLanding.classList.add('active');
     }
 
     // Handle initial load (hash in URL)
