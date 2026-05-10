@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ==========================================
-    // LED Calculator Logic
+    // LED Calculator Logic (Restored to Full Functionality)
     // ==========================================
     const btnCalculate = document.getElementById('btn-calculate');
     const calcResults = document.getElementById('calc-results');
@@ -112,17 +112,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const widthPx = Math.floor((widthM * 1000) / pitch);
             const heightPx = Math.floor((heightM * 1000) / pitch);
+            const diagonalInch = (Math.sqrt(Math.pow(widthM, 2) + Math.pow(heightM, 2)) * 39.37).toFixed(1);
+            const area = (widthM * heightM).toFixed(2);
             
-            calcResults.innerHTML = `
-                <div class="result-card">
-                    <div class="label">해상도</div>
-                    <div class="value">${widthPx} x ${heightPx} <span class="unit">px</span></div>
-                </div>
-                <div class="result-card">
-                    <div class="label">권장 시청 거리</div>
-                    <div class="value">${(pitch * 1.5).toFixed(1)} <span class="unit">m 이상</span></div>
-                </div>
-            `;
+            // Cabinet logic
+            const cabWidth = pitch >= 2.5 ? 0.64 : 0.5;
+            const cabHeight = pitch >= 2.5 ? 0.48 : 0.5;
+            const cabsW = Math.ceil(widthM / cabWidth);
+            const cabsH = Math.ceil(heightM / cabHeight);
+            const totalCabs = cabsW * cabsH;
+
+            // Power & Weight
+            const powerAvg = Math.round(area * 300);
+            const powerPeak = Math.round(area * 800);
+            const weight = Math.round(area * 35); 
+
+            const results = [
+                { label: '전체 해상도', value: `${widthPx} x ${heightPx}`, unit: 'px' },
+                { label: '대각선 크기', value: diagonalInch, unit: 'inch' },
+                { label: '총 캐비닛 수', value: totalCabs, unit: '개' },
+                { label: '평균 소비 전력', value: powerAvg, unit: 'W' },
+                { label: '최대 소비 전력', value: powerPeak, unit: 'W' },
+                { label: '예상 총 중량', value: weight, unit: 'kg' },
+                { label: '권장 시청 거리', value: (pitch * 1.5).toFixed(1), unit: 'm 이상' }
+            ];
+
+            calcResults.innerHTML = '';
+            results.forEach(res => {
+                const card = document.createElement('div');
+                card.className = 'feature-card';
+                card.style.padding = '24px';
+                card.style.background = '#f8f9fa';
+                card.innerHTML = `
+                    <div style="font-size: 13px; color: #666; font-weight: 600; margin-bottom: 8px; text-transform: uppercase;">${res.label}</div>
+                    <div style="font-size: 24px; font-weight: 700; color: #004b9b;">${res.value} <span style="font-size: 14px; font-weight: 500; color: #333;">${res.unit}</span></div>
+                `;
+                calcResults.appendChild(card);
+            });
             calcResults.style.display = 'grid';
         });
     }
